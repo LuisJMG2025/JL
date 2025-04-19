@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Loja Online</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f3f3f3; color: #333; }
+    header { background: #222; color: white; padding: 20px; text-align: center; }
+    main { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+    h2 { margin-bottom: 10px; }
+    .filtro { margin-bottom: 20px; }
+    select { padding: 8px; font-size: 16px; }
+    .produtos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+    .produto { background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; }
+    .produto img { max-width: 100%; height: auto; border-radius: 5px; }
+    .produto h3 { margin: 10px 0 5px; }
+    .produto p { margin-bottom: 10px; }
+    .produto button { background: #28a745; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; }
+    .produto button:hover { background: #218838; }
+    #carrinho { background: white; padding: 1rem; border-radius: 10px; margin-top: 2rem; }
+    #carrinho ul { list-style: none; padding: 0; }
+    #carrinho li { padding: 6px 0; border-bottom: 1px solid #ddd; }
+    footer { text-align: center; padding: 20px; background: #222; color: white; margin-top: 3rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Loja Online</h1>
+    <p>Os melhores produtos em um só lugar</p>
+  </header>
+
+  <main>
+    <div class="filtro">
+      <label for="filtro">Filtrar por categoria:</label>
+      <select id="filtro" onchange="filtrarCategoria()">
+        <option value="todas">Todas</option>
+        <option value="eletronicos">Eletrônicos</option>
+        <option value="roupas">Roupas</option>
+        <option value="beleza">Beleza</option>
+      </select>
+    </div>
+
+    <section class="produtos" id="lista-produtos"></section>
+
+    <section id="carrinho">
+      <h2>🛒 Carrinho de Compras</h2>
+      <ul id="itens-carrinho"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Loja Online - Todos os direitos reservados</p>
+  </footer>
+
+  <script>
+    const produtos = [
+      { id: 1, nome: 'Smartphone Galaxy', preco: 1499.90, imagem: 'https://via.placeholder.com/220x150', categoria: 'eletronicos' },
+      { id: 2, nome: 'Notebook Dell', preco: 3499.00, imagem: 'https://via.placeholder.com/220x150', categoria: 'eletronicos' },
+      { id: 3, nome: 'Camisa Social', preco: 99.90, imagem: 'https://via.placeholder.com/220x150', categoria: 'roupas' },
+      { id: 4, nome: 'Tênis Esportivo', preco: 229.00, imagem: 'https://via.placeholder.com/220x150', categoria: 'roupas' },
+      { id: 5, nome: 'Perfume Elegance', preco: 159.90, imagem: 'https://via.placeholder.com/220x150', categoria: 'beleza' },
+      { id: 6, nome: 'Hidratante Facial', preco: 49.99, imagem: 'https://via.placeholder.com/220x150', categoria: 'beleza' },
+    ];
+
+    const listaProdutos = document.getElementById('lista-produtos');
+    const itensCarrinho = document.getElementById('itens-carrinho');
+    const carrinho = [];
+
+    function exibirProdutos(lista) {
+      listaProdutos.innerHTML = '';
+      lista.forEach(produto => {
+        const card = document.createElement('div');
+        card.className = 'produto';
+        card.innerHTML = `
+          <img src="${produto.imagem}" alt="${produto.nome}">
+          <h3>${produto.nome}</h3>
+          <p>R$ ${produto.preco.toFixed(2)}</p>
+          <button onclick="adicionarAoCarrinho(${produto.id})">Adicionar</button>
+        `;
+        listaProdutos.appendChild(card);
+      });
+    }
+
+    function adicionarAoCarrinho(id) {
+      const produto = produtos.find(p => p.id === id);
+      carrinho.push(produto);
+      atualizarCarrinho();
+    }
+
+    function atualizarCarrinho() {
+      itensCarrinho.innerHTML = '';
+      carrinho.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.nome} - R$ ${item.preco.toFixed(2)}`;
+        itensCarrinho.appendChild(li);
+      });
+    }
+
+    function filtrarCategoria() {
+      const filtro = document.getElementById('filtro').value;
+      if (filtro === 'todas') {
+        exibirProdutos(produtos);
+      } else {
+        const filtrados = produtos.filter(p => p.categoria === filtro);
+        exibirProdutos(filtrados);
+      }
+    }
+
+    // Inicializa com todos os produtos
+    exibirProdutos(produtos);
+  </script>
+
+</body>
+</html>
